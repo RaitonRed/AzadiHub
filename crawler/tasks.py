@@ -57,19 +57,19 @@ def filter_for_protocols(data, protocols):
     filtered_data = []
     seen_configs = set()
     
-    # Process each decoded content
     for content in data:
-        if content and content.strip():  # Skip empty content
+        if content and content.strip():
             lines = content.strip().split('\n')
             for line in lines:
                 line = line.strip()
                 if line.startswith('#') or not line:
-                    # Always keep comment/metadata/empty lines
                     filtered_data.append(line)
                 elif any(protocol in line for protocol in protocols):
-                    if line not in seen_configs:
+                    # نرمال‌سازی خط کانفیگ برای حذف variations
+                    normalized_line = normalize_config_line(line)
+                    if normalized_line not in seen_configs:
                         filtered_data.append(line)
-                        seen_configs.add(line)
+                        seen_configs.add(normalized_line)
     return filtered_data
 
 # Create necessary directories if they don't exist
